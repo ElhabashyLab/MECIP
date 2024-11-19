@@ -1,0 +1,3 @@
+{"solver": ["liblinear", "saga"],
+"max_iter": [100, 1000, 5000],
+"penalty": ["l1", "l2"]}

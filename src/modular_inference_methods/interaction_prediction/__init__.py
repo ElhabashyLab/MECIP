@@ -1,0 +1,6 @@
+from src.modular_inference_methods.interaction_prediction.ml_based.gradient_boosting_predictor import GradientBoostingPredictor
+from .ml_based.svm_predictor import SVMPredictor
+from .ml_based.logistic_regression_predictor import LogisticRegressionPredictor
+from .ml_based.random_forest_predictor import RandomForestPredictor
+
+

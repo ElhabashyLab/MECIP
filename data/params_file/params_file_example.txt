@@ -1,0 +1,289 @@
+# params file template
+# all lines that should not be considered as parameters must start with '#'
+
+{
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================REQUIRED INPUTS==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+
+# define the type of run you want:
+    # evaluate the performance of this tool on the training set. Also create plots, ... while evaluating
+    # (only needs the training set)
+        "evaluate": true,
+
+    # create and train predictors on the training set and use the final model to predict interactions and interfaces on the test set
+    # returns no performance evaluation of the results
+    # returns predictions on the test set
+    # (needs both training and test set)
+        "predict": false,
+
+    # both "predict" and "evaluate" can be chosen in a single run (they will be executed after each other)
+
+
+# path to directory. Inside this directory a new folder will be created with all information on the run
+    "out_dir": "/media/ben/Volume/Ben/uni_stuff/Master_Thesis/co-evolution_mitochondria/data/out/full_prediction",
+
+# input files and directories. For more information look at 'src/dataset/read_dataset.py'
+
+# training set input
+    "training_input_complexes": "/media/ben/Volume/Ben/uni_stuff/Master_Thesis/co-evolution_mitochondria/data/datasets/human_mito/complex_set_988",
+    "training_input_proteins": "/media/ben/Volume/Ben/uni_stuff/Master_Thesis/co-evolution_mitochondria/data/datasets/human_mito/proteins",
+    "training_input_complexes_csv": "/media/ben/Volume/Ben/uni_stuff/Master_Thesis/co-evolution_mitochondria/data/datasets/human_mito/complex_set_988/complex_info_positive494_and_negative494.csv",
+    "training_input_proteins_csv": "/media/ben/Volume/Ben/uni_stuff/Master_Thesis/co-evolution_mitochondria/data/datasets/human_mito/proteins/published_human_mitocarta3.0_impiq2_proteins_3d (1).csv",
+
+# test set input
+    "test_input_complexes": "/media/ben/Volume/Ben/uni_stuff/Master_Thesis/co-evolution_mitochondria/data/datasets/human_mito/shorter_list",
+    "test_input_proteins": "/media/ben/Volume/Ben/uni_stuff/Master_Thesis/co-evolution_mitochondria/data/datasets/human_mito/proteins_old",
+    "test_input_complexes_csv": "/media/ben/Volume/Ben/uni_stuff/Master_Thesis/co-evolution_mitochondria/data/datasets/human_mito/shorter_list/human_mitocomplex_all_stat_0.1shortlist_2.csv",
+    "test_input_proteins_csv": "/media/ben/Volume/Ben/uni_stuff/Master_Thesis/co-evolution_mitochondria/data/datasets/human_mito/proteins_old/published_human_mitocarta3.0_impiq2_proteins_3d (1).csv",
+
+
+#number of jobs. This defines how many simultaneous threads can be run. possible: <int> or "max" (will use all cpus available)
+    "n_jobs" : 6,
+
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================PREDICTORS==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+# defines, which type of classification model should be used. choice between: random_forest, logistic_regression, gradient_boosting, svm (, and some baseline predictors)
+    "interaction_predictor_type": "random_forest",
+    "interface_predictor_type": "random_forest",
+
+# defines the hyperparameter grid used for the defined ml algorithm.
+# choice between null (default parameters), default (a pre-made parameter grid (see documentation), and a absolute filepath to a txt file containing all hyperparameter grids (in form of a dictionary)
+    "interaction_predictor_parameter_grid": "default",
+    "interface_predictor_parameter_grid": "default",
+
+# create a 'baseline_comparison.txt' file for the interface prediction that shows performance comparison to a baseline only predicting negatives.
+    "interface_with_all_negative_baseline" : true,
+
+# defines the features used for the interaction prediction
+# a list of all possible features: "kurtosis", "skewness", "max(cn)", "median(cn)", "iqr(cn)", "jarque_bera_test_statistic", "num_top_ecs", "num_clusters", "size_clusters", "n_seq", "n_eff", "sequence_length", "haddock_score_best", "haddock_score_average", "haddock_ecs_in_all", "haddock_ecs_in_half"
+    #"include_features_interaction": ["kurtosis", "skewness", "max(cn)", "median(cn)", "iqr(cn)", "jarque_bera_test_statistic", "num_top_ecs", "num_clusters", "size_clusters", "n_seq", "n_eff", "sequence_length",  "haddock_score_best", "haddock_score_average", "haddock_ecs_in_all", "haddock_ecs_in_half"],
+    # all without docking parameters:
+    #"include_features_interaction": ["kurtosis", "skewness", "max(cn)", "median(cn)", "iqr(cn)", "jarque_bera_test_statistic", "num_top_ecs", "num_clusters", "size_clusters", "n_seq", "n_eff", "sequence_length"],
+    # example for smaller set of features with docking:
+    #"include_features_interaction": ["max(cn)", "median(cn)", "iqr(cn)", "num_top_ecs", "size_clusters", "n_seq", "n_eff", "sequence_length", "haddock_score_best", "haddock_score_average", "haddock_ecs_in_all", "haddock_ecs_in_half"],
+    # example for smaller set of features without docking:
+    "include_features_interaction": ["max(cn)", "median(cn)", "iqr(cn)", "num_top_ecs", "size_clusters", "n_seq", "n_eff", "sequence_length"],
+
+# defines the features used for the interface prediction
+# a list of all possible features: "kurtosis", "skewness", "max(cn)", "median(cn)", "iqr(cn)", "jarque_bera_test_statistic", "num_top_ecs", "num_clusters", "size_clusters", "n_seq", "n_eff", "sequence_length", "haddock_score_best", "haddock_score_average", "haddock_ecs_in_all", "haddock_ecs_in_half", "cn", "rel_rank_ec", "dist_to_higher_cn", "dist_to_lower_cn", "cn_density", "added_conservation", "min_conservation", "max_conservation", "is_in_cluster", "cluster_size", "rsa_ij", "rsa_min", "heavy_atom_distance_in_top_model", "heavy_atom_distance_in_models", "num_models_satisfied", "heavy_atom_distance_in_best_top5", "heavy_atom_distance_in_best_top10"
+    #"include_features_interface": ["kurtosis", "skewness", "max(cn)", "median(cn)", "iqr(cn)", "jarque_bera_test_statistic", "num_top_ecs", "num_clusters", "size_clusters", "n_seq", "n_eff", "sequence_length", "haddock_score_best", "haddock_score_average", "haddock_ecs_in_all", "haddock_ecs_in_half", "cn", "rel_rank_ec", "dist_to_higher_cn", "dist_to_lower_cn", "cn_density", "added_conservation", "min_conservation", "max_conservation", "is_in_cluster", "cluster_size", "rsa_ij", "rsa_min", "heavy_atom_distance_in_top_model", "heavy_atom_distance_in_models", "num_models_satisfied", "heavy_atom_distance_in_best_top5", "heavy_atom_distance_in_best_top10"],
+    # all without docking parameters:
+    #"include_features_interface": ["kurtosis", "skewness", "max(cn)", "median(cn)", "iqr(cn)", "jarque_bera_test_statistic", "num_top_ecs", "num_clusters", "size_clusters", "n_seq", "n_eff", "sequence_length", "cn", "rel_rank_ec", "dist_to_higher_cn", "dist_to_lower_cn", "cn_density", "added_conservation", "min_conservation", "max_conservation", "is_in_cluster", "cluster_size", "rsa_ij", "rsa_min"],
+    # example for smaller set of features with docking:
+    #"include_features_interface": ["kurtosis", "max(cn)", "jarque_bera_test_statistic", "haddock_score_best", "haddock_score_average", "haddock_ecs_in_all", "haddock_ecs_in_half", "cn", "rel_rank_ec", "dist_to_higher_cn", "dist_to_lower_cn", "added_conservation", "min_conservation", "max_conservation", "is_in_cluster", "heavy_atom_distance_in_top_model", "heavy_atom_distance_in_models", "num_models_satisfied", "heavy_atom_distance_in_best_top5", "heavy_atom_distance_in_best_top10"],
+    # example for smaller set of features without docking:
+    "include_features_interface": ["kurtosis", "max(cn)", "jarque_bera_test_statistic", "cn", "rel_rank_ec", "dist_to_higher_cn", "dist_to_lower_cn", "added_conservation", "min_conservation", "max_conservation", "is_in_cluster"],
+
+# imputation method: possible options: "mean", "knn", describes the preferred method when imputing data, either compute the mean of column or use a k-nearest neighbour approach
+    "imputation_method": "mean",
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================CLUSTERING==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+# defines the cluster method used. choice between "pdb" and "old"
+    "cluster_method": "pdb",
+
+# pre computes inner contact map of single proteins -> this speeds up calculations if the same proteins are used in different complexes (still buggy)
+    "cluster_pre_compute_inner_contacts" : false,
+
+# defines the number of generated seeds in the clustering process
+    "cluster_ecs_seed_top_x": 10,
+    #comment: this is the percentile of the top considered ecs, not the whole set of ecs (0.5 means that half of the considered ECs are used as seed)
+    "cluster_ecs_seed_percentile": 0.5,
+
+# parameters when creating clusters:
+    # min size of a found cluster
+        "cluster_min_size": 5,
+    #only for cluster methods "pdb"(when no pdb present): defines the size of each bar of the cross search
+        "cluster_cross_search": 5,
+    #for cluster methods "pdb"(when no pdb present), and "old": defines the radius of the circle around a seed
+        "cluster_circle_search": 30,
+    #for cluster methods "pdb": defines the radius of the circle around a seed
+        "cluster_circle_search_pdb": 8,
+
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================RESIDUE SOLVENT ACCESSIBILITY==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+# column name of interest from rsa file
+    "rsa_measurement":"All-atoms_rel",
+# defines threshold indicating residue solvent accessibility for the given measurement
+    "rsa_threshold": 20,
+
+# if dssp as well as naccess files are given for a protein this will define the preferred file to take values from
+# possible values: "dssp", "naccess"
+    "rsa_preferred_method": "dssp",
+
+# ECs can be excluded, if the corresponding residues are not accessible
+#possible: null, "and" (only excluded if both residues on both proteins are not accessible), "or" (only excluded if one or more residues are not accessible)
+    "rsa_exclude" : null,
+
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================INPUT/READ-IN PARAMETERS==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+# features can be saved to save time when using the same parameters for consecutive runs
+# WARNING: when using different datasets or changing parameters that affect features, this will drastically bias your results and might lead to errors
+# dont use this function if you dont know what you are doing
+    "use_saved_features" : null,
+    "save_features" : null,
+
+# skips every check during read in. only do this if you know that your dataset has no problems. normally each complex is checked if all required inputs are present and if they are readable and make sense
+    "fast_read_in" : false,
+
+# check your complexes for far homology at the beginning and remove all that are likely to show far homology signs
+    "check_for_far_homology" : true,
+
+# check for pairwise sequence similarity. checks all complexes against each other. tries to find combinations of
+# protein sequences within these two complexes so that bot sequence pairs have a sequence similarity of 30% or more.
+# Since this will calculate N*(N-1)/2 global alignments with N = number of proteins, this option can take some time
+# (est. 3h for 900 proteins using 1 core on a home laptop)
+    "check_pairwise_sequence_similarity": false,
+    "pairwise_sequence_similarity_percent_threshold": 30,
+
+# only the complexes that have docking results will be considered
+    "only_use_complexes_with_docking_results": false,
+
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================OUTPUT/PLOT PARAMETERS==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+# create a decision boundary that will be used for certain plots and calculations
+# possible inputs: "lambda x:-1*x+2.5" or null
+    "ks_plot_decision_boundary": null,
+
+# in contact maps 2 different closenesses are shown in light and dark blue. The corresponding thresholds are:
+    "contact_map_ca_dist_threshold": 12,
+    "contact_map_heavy_atom_dist_threshold": 8,
+
+# create a table containing all features for all ECs and all complexes with all information
+# Warning: this can take time for bigger datasets and is not advised for datasets bigger than 1000 complexes (1000 complexes -> ~250MB csv file and 5 min computation if all features are toggled)
+    "save_full_table": false,
+
+# create complex specific plots (a folder for each complex will be created)
+# only those complexes that not have been eliminated by the interaction prediction will be plotted
+    "plot_complex_details" : false,
+
+# some plots are more computationally expensive and can be skipped here, as well as some other computations
+    "plot_expensive_plots" : false,
+
+# create for each predictor a feature pairplot. This gives insight on the pairwise realtions of all features used
+# especially for the interface prediction this can take a lot of time if many features and a big dataset are used (20 min for 1000 complexes and all features)
+    "plot_feature_pairplot" : false,
+
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================INTERACTION DEFINITION==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+# here the definitions for interactions can be set. This will influence the learning step, since it directly  influences
+# the distributions of positive and negative datapoints.
+
+# defines the maximal distance for 2 residues to be considered a positive EC (interacting) (looking at the closest pair of heavy atoms)
+    "TP_EC_distance_threshold_heavy_atoms" : 10,
+
+# defines the thresholds for an interaction of 2 proteins
+# 2 proteins must have at least <TP_interaction_num_interface_needed_threshold> residue pairs that have a distance of
+# <TP_interaction_distance_threshold> between their <TP_interaction_atom_type> atoms to be considered a interaction.
+    # possible atom types: "ca": c-alpha atoms, "na": any heavy atoms (no H)
+        "TP_interaction_atom_type" : "na",
+        "TP_interaction_distance_threshold" : 5,
+        "TP_interaction_num_interface_needed_threshold" : 1,
+
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================CONFIDENCE THRESHOLDS==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+# here the confidence thresholds for the 2 machine learning algorithms can be defined.
+# since the actual confidence values can differ quite drastically between runs it is advised to set the recall values instead.
+# all desicions can be observed in the corresponding roc and precision recall curves
+# disclaimer: the recall values can only be set when using the 'evaluate' type. If you wish to use them in the 'predict' mode, set the evaluate mode to true as well (1 evaluation step will be run first)
+
+
+# by setting these values, the confidence threshold will automatically be chosen that results in the wanted recall measure
+    "confidence_threshold_residue_level_recall": 0.8,
+    "confidence_threshold_ppi_recall": 0.85,
+
+# if the recall measures above are set to null, the confidence thresholds can be set directly here
+# if the recall measures above are set to a numerical value these parameters have no effect
+    "confidence_threshold_residue_level": 0.15,
+    "confidence_threshold_ppi": 0.46,
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================HADDOCK==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+# defines if a directory with all distance restraints should be created (tbl format)
+    "generate_distance_restraints": true,
+# defines if the two respective monomer pdb files should be created for each restraint file
+# (pdb files have all requirements for using them directly with HADDOCK)
+# use this option if you want to run HADDOCK on your own with the results from this run
+    "distance_restraints_with_monomer_pdbs": true,
+
+# with this you can directly use HADDOCK with the resulting restraints from this run
+# for more information on the parameters below look at the HADDOCK documentation
+# might still have unresolved issues
+    "run_haddock": false,
+    "haddock_cmrest":true,
+    "haddock_sym_on":false,
+    "haddock_num_struc_rigid":100,
+    "haddock_num_struc_refine":50,
+    "haddock_num_struc_analyse":50,
+    "haddock_ana_type":"cluster",
+    "haddock_clust_meth":"RMSD",
+    "haddock_clust_cutoff":5,
+    "haddock_clust_size":4,
+    "HADDOCK_DIR": "",
+
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================PDB==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+#defines the threshold for a normal pdb file to be taken into consideration (looking at the complex-info-csv file)
+    "pdb_threshold_identity": 95,
+    "pdb_threshold_align_coverage": 80,
+
+# threshold for any residue in an alphafold pdb file to be taken into consideration (plddt is a confidence measure for each residue marked in the AF pdb file)
+    "pdb_af_threshold_plddt": 70,
+# threshold for the percentage of residues that need to achieve the plddt threshold above. If this percentage is not achieved, the AF pdb file is ignored completely
+    "pdb_af_threshold_%_confident_res" : 10,
+
+# if a pdb file exists and a EC contains a residue that is not within the range of residues of the pdb file
+# the EC can be removed
+# use this function only if you know the quality of your pdb files
+# by not removing them they cannot be included in clusters when using the "pdb" method
+# on the other hand many potential ECs can be excluded when having bad pdb coverage
+    "remove_ecs_outside_of_monomer_pdb" : false,
+
+# ----------------------------------------------------------------------------------------------------------------------
+# ===============================OTHERS==============================================
+# ----------------------------------------------------------------------------------------------------------------------
+
+# this defines the number of ECs that are considered to be true (indicating interacting residues)
+# the maximum of either the fixed number of ECs or the top percentile is taken as the number of considered ECs
+    "ecs_consider_top_x": 50,
+    "ecs_consider_percentile": 0.999,
+
+# defines the number of outer cross-validation runs (folds / splits) for both predictions
+    "n_outer_cv_interaction": 10,
+    "n_outer_cv_interface": 10,
+
+
+
+# a random resampling method can be added to both predictions to counteract imbalanced training data
+# see 'predictor_eval.txt' file for insights on potential imbalanced training data
+# choice between null (no resampling is done, if dataset is quite balanced), "RandomOverSampler", and "RandomUnderSampler"
+    "resample_interaction_prediction_data": null,
+    "resample_interface_prediction_data": null
+
+}

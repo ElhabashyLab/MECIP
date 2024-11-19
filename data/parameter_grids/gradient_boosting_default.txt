@@ -1,0 +1,7 @@
+{"loss": ["deviance", "exponential"],
+"learning_rate": [0.1, 0.01, 1],
+max_features": ["sqrt", "log2", None],
+max_leaf_nodes": [3, 9, 12, 15],
+validation_fraction": [.2],
+n_iter_no_change": [10],
+"tol": [.0001]}
